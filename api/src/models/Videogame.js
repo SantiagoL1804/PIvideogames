@@ -21,10 +21,10 @@ module.exports = (sequelize) => {
       rating: {
         type: DataTypes.INTEGER,
       },
-      release_date: {
+      released: {
         type: DataTypes.STRING,
       },
-      ID: {
+      id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
