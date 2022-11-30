@@ -161,25 +161,41 @@ router.post("/", async (req, res) => {
     image,
     createdInDb,
   } = req.body;
+  platforms.join("-");
   if (!name || !description || !platforms)
     res.status(404).send("Faltan datos obligatorios");
   try {
-    const newVideogame = await Videogame.create({
-      name,
-      description,
-      platforms,
-      image,
-      rating,
-      released,
-      createdInDb,
+    // const newVideogame = await Videogame.create({
+    //   name,
+    //   description,
+    //   platforms,
+    //   image,
+    //   rating,
+    //   released,
+    //   createdInDb,
+    // });
+
+    const newVideogame = await Videogame.findOrCreate({
+      where: {
+        name,
+        description,
+        platforms,
+        image,
+        rating,
+        released,
+      },
     });
 
+    await newVideogame[0].setGenres(genres);
     //buscar el genero por el lado del nombre
     // q llegan por nombrre, recorrerlos por foreach q solo recoprre y no devuelve nada igualar a un await buscando los generos, una vez obtenidos
-    await newVideogame.addGenre(genres);
+
+    // await newVideogame.addGenres(genres);
+
     return res.status(201).send("Videojuego agregado con exito");
   } catch (error) {
-    res.status(404).send(error.message);
+    console.log(error.message);
+    // res.status(404).send(error.message);
   }
 });
 

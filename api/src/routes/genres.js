@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
   try {
     //En caso de que ya haya generos en mi db, la traigo
     const genres = await Genre.findAll({
-      attributes: ["id", "name"],
+      attributes: ["name"],
     });
     if (genres.length) return res.json(genres);
     console.log(genres);
@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
     const api = await axios.get(`https://api.rawg.io/api/genres?key=${APIKEY}`);
 
     //Hago un map para quedarme con las propiedades dentro de la data que necesito, en este caso, name y games asociados
-    const genresApi = api.data.results;
+    const genresApi = api.data.results.map((genre) => genre.name);
     // .map((g) => {
     //   return {
     //     name: g.name,
@@ -27,7 +27,12 @@ router.get("/", async (req, res) => {
     // });
 
     //Creo y guardo lo que me traje de la api externa en el modelo Genre de mi base de datos
-    await Genre.bulkCreate(genresApi);
+
+    // await Genre.bulkCreate(genresApi);
+
+    genresApi.forEach((genre) => {
+      Genre.findOrCreate({ where: { name: genre } });
+    });
     // const genresREADY = genresApi.map((game) => {
     //   return {
     //     id: game.id,
@@ -35,10 +40,10 @@ router.get("/", async (req, res) => {
     //   };
     // });
 
-    const genresDB = await Genre.findAll({
-      attributes: ["id", "name"],
-    });
-    res.json(genresDB);
+    // const genresDB = await Genre.findAll({
+    //   attributes: ["id", "name"],
+    // });
+    res.json(genresApi);
   } catch (error) {
     res.send(error.message);
   }
