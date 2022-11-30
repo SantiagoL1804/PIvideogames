@@ -14,7 +14,7 @@ const APIKEY = process.env.YOUR_API_KEY;
 router.get("/", async (req, res) => {
   try {
     let vidgamesDB = await Videogame.findAll({
-      attributes: ["id", "name"],
+      attributes: ["id", "name", "image"],
       include: Genre,
     });
 
@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
       (acc, el) =>
         acc.concat({
           ...el,
-          genres: el.genres.map((g) => g.name),
+          genres: el.genres?.map((g) => g.name),
         }),
       []
     );
@@ -42,12 +42,12 @@ router.get("/", async (req, res) => {
       while (allGames.length <= 100) {
         pages++;
 
-        let apiVidgames = apiData.data.results.map((game) => {
+        let apiVidgames = apiData.data.results?.map((game) => {
           return {
             id: game.id,
             name: game.name,
             image: game.background_image,
-            genres: game.genres.map((g) => g.name),
+            genres: game.genres?.map((g) => g.name),
           };
         });
         allGames = [...allGames, ...apiVidgames];
@@ -115,7 +115,7 @@ router.get("/", async (req, res) => {
         return {
           name: game.name,
           image: game.background_image,
-          genres: game.genres.map((g) => g.name),
+          genres: game.genres?.map((g) => g.name),
         };
       });
 
@@ -151,7 +151,16 @@ router.get("/", async (req, res) => {
 /////////////
 
 router.post("/", async (req, res) => {
-  const { name, description, platforms, rating, released, genres } = req.body;
+  const {
+    name,
+    description,
+    platforms,
+    rating,
+    released,
+    genres,
+    image,
+    createdInDb,
+  } = req.body;
   if (!name || !description || !platforms)
     res.status(404).send("Faltan datos obligatorios");
   try {
@@ -159,8 +168,10 @@ router.post("/", async (req, res) => {
       name,
       description,
       platforms,
+      image,
       rating,
       released,
+      createdInDb,
     });
 
     //buscar el genero por el lado del nombre

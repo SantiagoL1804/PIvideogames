@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       platforms: {
-        type: DataTypes.STRING,
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
       },
       rating: {
@@ -28,6 +28,14 @@ module.exports = (sequelize) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
+      },
+      image: {
+        type: DataTypes.STRING,
+      },
+      createdInDb: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
       },
     },
     {

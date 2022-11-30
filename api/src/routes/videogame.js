@@ -43,12 +43,7 @@ router.get("/:idVideogame", async (req, res) => {
         name: game.name,
         image: game.background_image,
         description: game.description,
-        platforms: game.platforms.map((p) => {
-          return {
-            id: p.platform.id,
-            name: p.platform.name,
-          };
-        }),
+        platforms: game.platforms.map((p) => p.platform.name),
         rating: game.rating,
         released: game.released,
         id: game.id,
