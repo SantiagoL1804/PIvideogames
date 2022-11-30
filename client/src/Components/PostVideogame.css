@@ -1,0 +1,7 @@
+p.danger {
+  color: red;
+}
+
+input.danger {
+  border: 2px red solid;
+}
