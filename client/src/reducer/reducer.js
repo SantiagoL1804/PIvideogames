@@ -30,6 +30,7 @@ const rootReducer = (state = initialState, action) => {
     case GET_VIDEOGAME_DETAIL:
       return { ...state, videogameDetail: action.payload };
     case GET_GENRES:
+      console.log(state.genres);
       return { ...state, genres: action.payload };
     case GET_VIDEOGAMES_BY_NAME:
       return {

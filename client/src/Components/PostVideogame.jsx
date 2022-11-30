@@ -57,20 +57,6 @@ const PostVideogame = () => {
     rating: "",
   });
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(postVideogame(input));
-    // setInput({
-    //   name: "",
-    //   description: "",
-    //   released: "",
-    //   rating: "",
-    //   image: "",
-    //   genres: [],
-    //   platforms: [],
-    // });
-  };
-
   const changeHandler = (e) => {
     let name = e.target.name;
     let value = e.target.value;
@@ -83,7 +69,7 @@ const PostVideogame = () => {
     let value = e.target.value;
     e.preventDefault();
     if (!input[name].includes(value)) {
-      setInput({ ...input, [name]: input[name].concat(value) });
+      setInput({ ...input, [name]: [...input[name], value] });
     }
     console.log(input[name]);
   };
@@ -103,6 +89,21 @@ const PostVideogame = () => {
     }
   };
 
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(postVideogame(input));
+    setInput({
+      name: "",
+      description: "",
+      released: "",
+      rating: 0,
+      image: "",
+      genres: [],
+      platforms: [],
+    });
+    alert(`${input.name} fue creado con exito!`);
+  };
+  console.log(input);
   return (
     <div>
       <h3>Crea tu videojuego</h3>
@@ -136,7 +137,7 @@ const PostVideogame = () => {
         <div>
           <label htmlFor="">Rating: </label>
           <input
-            type="text"
+            type="number"
             name="rating"
             value={input.rating}
             onChange={changeHandler}
@@ -179,7 +180,7 @@ const PostVideogame = () => {
             id="genres"
             name="genres"
             value={input.genres}
-            onChange={selectHandler}
+            onChange={(e) => selectHandler(e)}
           >
             <option>...</option>
             {sortGenreNames?.map((g) => {
